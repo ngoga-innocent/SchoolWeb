@@ -1,0 +1,39 @@
+
+{% extends './base.html' %}
+{% load static tailwind_tags %}
+{% block content %}
+<div class="flex flex-row justify-between">
+    <div>
+        <h1 class="font-bold text-md">Welcome to Your Dashboard</h1>
+    </div>
+    <div class="flex flex-row">
+        <h2 class="text-sm font-bold">{{date}}</h2>
+
+    </div>
+</div>
+<div class="w-[95%] my-8 py-10 self-center px-4 bg-blue-900 rounded-lg flex flex-row justify-between">
+    <h1 class="text-lg font-bold text-white">Good {{time}} {{user.first_name}}</h1>
+    <h1 class="text-white font-bold">Enrolled in <span class="text-orange-600">{{course.name}}</span></h1>
+
+</div>
+<div class="grid grid-cols-4 gap-5 w-[95%] self-center">
+    {% if lessons %}
+        {% for lesson in lessons  %}
+            <div class="w-[100%] border py-2 flex flex-col rounded-lg border-black bg-transparent items-center justify-center hover:bg-blue-900">
+                <i class="fa-solid fa-book" style="color: brown;"></i>
+                <h2 class="hover:text-white font-semibold">
+                    {{lesson.name}}
+                </h2>
+            </div>
+        {% endfor %}
+        
+    {% endif %}
+    
+
+</div>
+    
+
+
+    
+{% endblock content %}
+    

@@ -1,0 +1,132 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block Headlines %}
+    
+    <h1 class="font-bold text-white text-2xl  animate-pulse">
+         
+"Empowering Minds, Building Futures"
+
+
+    </h1>
+    <div class="py-8">
+        <button class="rounded-lg bg-green-800 hover:bg-orange-500 font-bold   px-2 py-3 text-white">Join Our School</button>
+    </div>
+{% endblock Headlines %}
+
+{% block content %}
+
+<div class="lg:grid lg:grid-cols-2 py-5 px-20 items-center w-full  transition-opacity duration-500 delay-200 ease-in-out ">
+    <div class="video-container rounded-lg">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/QqHvUnUfwvI" frameborder="1" class="rounded-lg"  allowfullscreen></iframe>
+    </div>
+    <div >
+        <h1 class="text-2xl transition-all ">Why Choose Us</h1>
+        <ul>
+            <li>
+               
+                <h2 class="font-bold py-2">Academic Excellence:</h2>
+                 <p class="max-w-[70%]"> Our rigorous curriculum, innovative teaching methods, and dedicated faculty ensure that every student receives a high-quality education that prepares them for success in college and beyond.</p>
+            </li>
+            <li>
+               <h2 class="font-bold py-2">
+                 Personalized Learning
+               </h2>
+               <p class="max-w-[70%]">Every student is unique, which is why we offer personalized learning experiences tailored to their individual needs, interests, and learning styles. Our small class sizes and dedicated teachers ensure that each student receives the attention and support they deserve.</p>
+            </li>
+        </ul>
+    </div>
+
+</div>
+<h1 class="text-center text-4xl font-bold py-3">Get your Desired Courses With Us</h1>
+<div class="grid grid-cols-2 items-center gap-3 py-4 px-20  bg-transparent rounded-xl mx-5">
+    <div class="h-[100%] flex flex-row">
+        <div>
+            <h1 class="font-bold text-2xl decoration-slice py-10 flex flex-row">Our Courses</h1>
+        <h1 class="max-w-[60%]">
+            I am thrilled to introduce you to the diverse range of courses available at our institution. Each course is designed to provide you with the knowledge, skills, and experiences you need to thrive in your chosen field and make meaningful contributions to society.
+        </h1>
+        <button class="bg-blue-500 text-white font-bold rounded-lg hover:transition  hover:bg-opacity-50 hover:ease-in-out duration-500 px-8 py-3 my-4 ">Enroll In</button>
+        
+        </div>
+        <div class="h-[90%] w-1 bg-slate-800 opacity-5" ></div>
+        
+    </div>
+    <div>
+        {% if courses %}
+        <div class="grid grid-cols-2 gap-3">
+            {% for course in courses  %}
+            <div class="bg-white border border-slate-400 z-10 shadow-lg shadow-black p-2 px-4">
+               <div class="rounded-full w-14 h-14 overflow-hidden py-4" id="image_home">
+                <img id="home_course" src="{{course.thumbnail.url}}" alt="" class=" object-cover">
+               </div>
+                    
+                
+                <h1 class="font-bold py-2 ">
+                    {{course.name}}
+                </h1>
+                <p class="text-xs">{{course.description | truncatewords:10}}</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+            
+        {% endif %}
+        
+    </div>
+    
+    
+</div>
+<div class="py-20 bg-cover bg-opacity-25" style="background-image: url('{% static "images/background.jpg" %}'); " id="values"> 
+    <h2 class="font-bold text-center text-white text-2xl py-6">Our School Values</h2>
+    <div class="grid grid-cols-3 gap-3 px-20 " >
+    <div class="flex flex-row gap-8 items-center bg-white border z-10 shadow-lg shadow-black rounded-xl py-2 px-2">
+        <i class="w-24 h-24 fa-solid fa-location-crosshairs" style="height: 20px;width: 20px;color:red"></i>
+        <div>
+            <h1 class="font-bold py-6 text-center">Respect</h1>
+        <p>Teaching students to treat others with respect, regardless of differences in background, beliefs, or opinions. This includes respecting oneself, peers, teachers, and the broader community.</p>
+        </div>
+    </div>
+    <div class="flex flex-row gap-8 items-center bg-white border z-10 shadow-lg shadow-black rounded-xl py-2 px-2">
+        <i class="w-24 h-24 fa-solid fa-location-crosshairs" style="height: 20px;width: 20px;color:red"></i>
+        <div>
+            <h1 class="font-bold py-6 text-center">Honesty and Integrity</h1>
+        <p> Encouraging honesty and integrity in all aspects of life, including academic work, relationships, and personal conduct. Emphasizing the importance of being truthful and trustworthy.</p>
+        </div>
+    </div>
+    <div class="flex flex-row gap-8 items-center bg-white border z-10 shadow-lg shadow-black rounded-xl py-2 px-2">
+        <i class="w-24 h-24 fa-solid fa-location-crosshairs" style="height: 20px;width: 20px;color:red"></i>
+        <div>
+            <h1 class="font-bold py-6 text-center">Responsibility</h1>
+        <p>Fostering a sense of responsibility towards oneself and others. Teaching students to take ownership of their actions, make responsible decisions, and fulfill their obligations and commitments.</p>
+        </div>
+    </div>
+    <div class="flex flex-row gap-8 items-center bg-white border z-10 shadow-lg shadow-black rounded-xl py-2 px-2">
+        <i class="w-24 h-24 fa-solid fa-location-crosshairs" style="height: 20px;width: 20px;color:red"></i>
+        <div>
+            <h1 class="font-bold py-6 text-center">Compassion and Empathy: </h1>
+        <p> Cultivating compassion and empathy towards others, promoting kindness, understanding, and consideration for the feelings and experiences of others.</p>
+        </div>
+    </div>
+    <div class="flex flex-row gap-8 items-center bg-white border z-10 shadow-lg shadow-black rounded-xl py-2 px-2">
+        <i class="w-24 h-24 fa-solid fa-location-crosshairs" style="height: 20px;width: 20px;color:red"></i>
+        <div>
+            <h1 class="font-bold py-6 text-center">Fairness and Justice</h1>
+        <p>Instilling a sense of fairness and justice, teaching students to treat others fairly and advocate for equality and justice in their communities.</p>
+        </div>
+    </div>
+    <div class="flex flex-row gap-8 items-center bg-white border z-10 shadow-lg shadow-black rounded-xl py-2 px-2">
+        <i class="w-24 h-24 fa-solid fa-location-crosshairs" style="height: 20px;width: 20px;color:red"></i>
+        <div>
+            <h1 class="font-bold py-6 text-center">Courage and Perseverance</h1>
+        <p> Encouraging courage and perseverance in the face of challenges and adversity. Teaching students to overcome obstacles, take risks, and persist in pursuit of their goals.
+
+</p>
+        </div>
+    </div>
+
+    
+</div>
+</div>
+    
+{% endblock content %}
+    

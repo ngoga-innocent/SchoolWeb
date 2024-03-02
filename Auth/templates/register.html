@@ -1,0 +1,115 @@
+{% load static tailwind_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Web</title>
+    {% tailwind_css %}
+    <script src="{% static 'js/Jquery.js' %}"></script>
+     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+     <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body class="h-screen items-center justify-center overflow-scroll">
+    <div class="grid grid-cols-2 h-[100%] gap-3 bg-black">
+        <div id="test_bg" class="h-full rounded-r-3xl bg-blend-overlay bg-opacity-20">
+            
+            <img  class="w-20 h-20" src="{% static 'images/logo.png' %}" alt=""><!-- <img src="{% static 'images/school_bg.jpg' %}" class="h-full object-cover rounded-r-3xl" alt=""> -->
+        </div>
+        <div class="flex flex-col justify-center w-[100%] px-3">
+                <h2 class="text-white font-bold text-lg py-2">Register</h2>
+                <p class="text-white text-sm">If you have an account You can <a class="font-bold text-purple-800" href="{% url 'login' %}">Login Here</a></p>
+
+                <form action="{% url 'register' %}" method="post" class="flex flex-col w-[90%] shadow-inner py-3 shadow-white my-7  justify-start px-4 rounded-xl border-white mx-10">
+                    {% csrf_token %}
+                    <div class="my-3">
+                        <label for="Account type" class="text-white font-bold text-sm">Account Type</label>
+                        <select name="account_type" id="type" class="rounded-lg bg-transparent text-white">
+                            <option value="Parent" class="bg-transparent text-black">Parent</option>
+                            <option value="Student" class="bg-transparent text-black"> Student</option>
+                        </select>
+                    </div>
+                    <div class="my-3 hidden" id="course">
+                        <label for="course" class="text-white font-bold text-sm">Choose  Course</label>
+                        <select name="course" id="course" class="rounded-lg bg-transparent text-white">
+                            <option value="">---</option>
+                            {% if courses %}
+                                {% for course in courses %}
+                                    <option value="{{ course.id }}" class="bg-transparent text-black">{{ course.name }}</option>
+                                {% endfor %}
+                            {% endif %}
+                        </select>
+                    </div>
+                    
+                               
+                                                                
+                           
+                    <div class="gap-y-7 flex flex-col">
+                      
+                        <div class="flex flex-row items-center border-b w-[100%] rounded-lg justify-start gap-3 px-5">
+                            <i class="fa-solid fa-envelope" style="color:white"></i>
+                            
+                             <input type="email" name="email" required class=" w-[100%] text-sm font-bold bg-transparent rounded-lg border-0 text-white" placeholder="Enter Your Email">
+                        </div>
+                        <div class="flex flex-row items-center border-b w-full rounded-lg justify-start gap-3 px-5">
+                            <i class="fa-solid fa-user" style="color:white"></i>
+                            
+                             <input type="text" name="username" required class=" w-[100%] text-sm font-bold bg-transparent rounded-lg border-0 text-white" placeholder="Enter your Username">
+                        </div>
+                        <div class="flex flex-row items-center border-b w-full rounded-lg justify-start gap-3 px-5">
+                            <i class="fa-solid fa-user" style="color:white"></i>
+                            
+                             <input type="text" name="first_name" required class=" w-[100%] text-sm font-bold bg-transparent rounded-lg border-0 text-white" placeholder="Enter your First Name">
+                        </div>
+                        <div class="flex flex-row items-center border-b w-[100%] rounded-lg justify-start gap-3 px-5">
+                            <i class="fa-solid fa-user" style="color:white"></i>
+                            
+                             <input type="text" name="last_name" required class=" w-[100%] text-sm font-bold bg-transparent rounded-lg border-0 text-white" placeholder="Enter Your Second Name">
+                        </div>
+                        <div class="flex flex-row items-center border-b w-[100%] rounded-lg justify-start gap-3 px-5">
+                            <i class="fa-solid fa-lock" style="color:white"></i>
+                            
+                             <input type="password" name="password" required class=" w-[100%] text-sm font-bold bg-transparent rounded-lg border-0 text-white" placeholder="Enter Password">
+                        </div>
+                        <div class="flex flex-row items-center border-b w-[100%] rounded-lg justify-start gap-3 px-5">
+                            <i class="fa-solid fa-lock" style="color:white"></i>
+                            
+                             <input type="password" name="confirm_password" required class=" w-[100%] text-sm font-bold bg-transparent rounded-lg border-0 text-white" placeholder="Confirm Password">
+                        </div>
+                       
+                    </div>
+                    {% if error %}
+                    <h2 class="text-orange-400 text-center text-sm font-bold">{{error}}</h2>
+                        
+                    {% endif %}
+                    
+                    <button class="rounded-lg bg-blue-600 text-white  px-5 py-2 my-2">Register</button>
+                </form>
+        </div>
+    </div>
+    
+   <script>
+    $(document).ready(function(){
+        // Define a function to toggle visibility based on the selected account type
+        function toggleCourseVisibility() {
+            const type = $('#type').val();
+            if (type === 'Student') {
+                $('#course').removeClass('hidden');
+            } else {
+                $('#course').addClass('hidden');
+            }
+        }
+        
+        // Call the function on page load
+        toggleCourseVisibility();
+        
+        // Listen for change in the account type dropdown and toggle visibility accordingly
+        $('#type').change(function() {
+            toggleCourseVisibility();
+        });
+    });
+</script>
+</body>
+</html>

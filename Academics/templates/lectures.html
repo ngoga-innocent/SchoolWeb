@@ -1,0 +1,196 @@
+{% extends 'Dashboard/base.html' %}
+{% load static %}
+{% block content %}
+<div class="flex flex-row h-[100%]">
+    <div class="w-[20%] flex flex-col bg-gray-400 overflow-x-hidden  overflow-y-scroll border mx-2 rounded-lg px-2">
+        <h2 class="font-bold mb-20 mt-4 ">Chat </h2>
+        <input type="hidden" value="{{user.id}}" id="logged_user">
+        {% if lectures %}
+            {% for lecture in lectures %}
+               <button id="lecture" onclick="getMessage(event,this)" value="{{lecture.user.id}}" class="flex flex-row gap-2 items-center hover:bg-blue-100 overflow-x-visible rounded-md px-2 my-1 border bg-transparent py-1">
+                <img src="{% static 'images/avatar.jpg' %}" alt="" class="w-10 h-10 rounded-full">
+                <p class="font-bold text-xs ">{{lecture.user.username}}</p>
+                <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+               </button> 
+            {% endfor %}
+        {% elif rooms  %}
+             {% for room in rooms %}
+               <button id="lecture" onclick="getMessage(event,this)" value="{{room.sender.id}}" class="flex flex-row gap-2 items-center hover:bg-blue-100 overflow-x-visible rounded-md px-2 my-1 border bg-transparent py-1">
+                <img src="{% static 'images/avatar.jpg' %}" alt="" class="w-10 h-10 rounded-full">
+                <p class="font-bold text-xs ">{{room.sender.username}}</p>
+                <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+               </button> 
+            {% endfor %}
+        
+            
+        {% else %}
+        <p class="self-end flex-end text-xs font-bold">No curent User</p>
+            
+        {% endif %}
+        
+    </div>
+    <div class="flex flex-col w-[100%] h-full justify-end">
+        <div class="h-[89%] overflow-y-scroll w-full flex flex-col px-4 py-2" id="messages-container">
+           
+        </div>
+        
+       <form id="message_form" class="flex flex-row  w-[100%] px-4">
+        
+            <div class="bg-transparent w-[95%] ">
+                <textarea type="text" id="message_text" placeholder="Text Message...." class="border w-[95%] rounded-lg max-h-14"></textarea>
+                <input type="hidden" id="csrf_token1" value="{{ csrf_token }}">
+            </div>  
+            <button type="submit" class="bg-blue-900 px-4 rounded-lg items-center ">
+                
+                    <div class="rotate-45">
+                        <i class="fa fa-paper-plane" aria-hidden="true" style="color: rgb(179, 144, 144);size: 20px;"></i>
+                    </div>
+                
+            </button>
+       </form>
+    </div>
+
+</div>
+<script>
+    var selectedUser;
+    var logged_in=$('#logged_user').val()
+    var current_room
+    function scrollToBottom() {
+    var container = document.getElementById('messages-container');
+    container.scrollTop = container.scrollHeight;
+}
+     function getMessage(event,button){
+        event.preventDefault(); // Prevent page reload
+        
+        var id = button.value;
+        selectedUser=id
+        getCurrentRoom(selectedUser)
+        
+        var csrftoken = $('#csrf_token').val();
+        $.ajax({
+            method:'POST',
+            url:'{% url "chat" %}',
+            data:{'id':id,'csrfmiddlewaretoken': csrftoken},
+            success:function(data){
+            setInterval(getRoomMessage, 2000);
+
+                if($('#message_form').hasClass('hidden')){
+                    $('#message_form').removeClass('hidden')
+                }
+                $('#messages-container').empty();
+                // var message=JSON.parse(data)
+                data.map((item)=>{
+                    var senderIsLoggedInUser = (item.fields.sender == logged_in);
+                    var messageClass = senderIsLoggedInUser ? ' w-[40%] rounded-md my-1 bg-white flex-end self-end px-2 py-1 border ' : ' border bg-white w-[40%] flex-start rounded-md my-1 self-start px-2 py-1';
+                    var messageElement = $('<div class="message ' + messageClass + '"></div>');
+                     messageElement.text(item.fields.message);
+                     $('#messages-container').append(messageElement);
+                    // console.log(item.fields)
+                })
+              
+            },
+            error:function(error){
+                console.log(error)
+            }
+
+        })
+        
+    }
+    //Current Opened Room 
+    function getCurrentRoom(reciever_id){
+        var csrftoken = $('#csrf_token').val();
+        $.ajax({
+            method:'POST',
+            url:'{% url "get_current_room" %}',
+            data:{'receiver_id':reciever_id,'csrfmiddlewaretoken': csrftoken},
+            success:function(data){
+                current_room=data
+            },
+            error:function(error){
+                console.log(error)
+            }
+        })
+    }
+
+    //Get Message of Opened Room
+    function getRoomMessage(){
+        
+        var csrftoken = $('#csrf_token').val();
+        $.ajax({
+            method:'POST',
+            url:'{% url "get_room_messages" %}',
+            data:{
+                'room_name':current_room,
+                'csrfmiddlewaretoken':csrftoken
+            },
+            success:function(data){
+                 $('#messages-container').empty();
+                // var message=JSON.parse(data)
+                data.map((item)=>{
+                    console.log(item)
+                    var senderIsLoggedInUser = (item.fields.sender == logged_in);
+                    var messageClass = senderIsLoggedInUser ? ' w-[40%] rounded-md my-1 bg-white flex-end self-end px-2 py-1 border flex flex-row justify-between ' : ' flex flex-row justify-between border bg-white w-[40%] flex-start rounded-md my-1 self-start px-2 py-1';
+                    var messageElement = $('<div class="message text-sm' + messageClass + '"></div>');
+                    
+                     messageElement.text(item.fields.message);
+                     $('#messages-container').append(messageElement);
+                     
+    
+                    var timestampElement = $('<div class="timestamp text-xs font-bold self-end"></div>');
+                    var timestamp = new Date(item.fields.timestamp); 
+                    var timestampText = timestamp.toLocaleString(); 
+                    timestampElement.text(timestampText);
+    
+    
+                    messageElement.append(timestampElement);
+                    // console.log(item.fields)
+                })
+            },
+            error:function(error){
+                console.log(error)
+            }
+
+        })
+    }
+    $(document).ready(function(){
+        
+        $('#message_form').toggleClass('hidden')
+        $('#message_form').on('submit',function(e){
+        e.preventDefault()
+        var message=$('#message_text').val()
+        var csrftoken = $('#csrf_token1').val();
+        
+        
+        // console.log(selectedUser)
+        if(message !=''){
+            $.ajax({
+            method:'POST',
+            url:'{% url "send_chat" %}',
+            data:{'message':message,'csrfmiddlewaretoken':csrftoken,'reciever_id':selectedUser},
+            success:function(data){
+                $('#message_text').val("")
+                    var messageElement = $('<div class="message"></div>');
+                     var senderIsLoggedInUser = (item.fields.sender == logged_in);
+                    var messageClass =  'w-[40%] rounded-md my-1 bg-white flex-end self-end px-2 py-1 border ';
+                    var messageElement = $('<div class="message ' + messageClass + '"></div>');
+                     messageElement.text(data);
+                     $('#messages-container').append(messageElement);
+                     $('#message_form')[0].reset();
+            },
+            error:function(error){
+                console.log(error)
+            }
+        })
+        }
+        else{
+            alert('You are sending an empty message')
+        }
+        
+       })
+    
+    })
+    
+    
+</script>
+{% endblock content %}
+    

@@ -1,0 +1,52 @@
+{% extends 'Dashboard/base.html' %}
+
+{% block content %}
+<div >
+    <h2 class="text-center font-bold">Get Your Marks in for this Intake</h2>
+    <div class="flex flex-row justify-between">
+        <div class="flex flex-row gap-2 items-center">
+            <h4 class="text-sm font-bold">Show</h4>
+            <div class="border rounded-lg bg-blue-500 text-black font-bold p-1 items-center text-center hover:bg-blue-900 hover:text-white">10 <i class="fa fa-chevron-circle-down" aria-hidden="true" style="color:white"></i> </div>
+            <h4 class="text-sm font-bold">Entries</h4>
+            <div class="flex flex-row border rounded-md items-center px-2">
+                <div class="rotate-[20deg]"><i class="fa fa-search" aria-hidden="true"></i></div>
+                <input type="text" class="border-0 rounded-md my-1" placeholder="Search">
+            </div>
+        </div>
+        <button class="text-white bg-orange-600 rounded-md px-3 py-1"><a href="{% url 'download_marks' %}">Download</a></button>
+    </div>
+    <div id="table" class="flex flex-col my-3 ">
+        <table class="table-auto text-sm text-left border border-collapse border-gray-300 rtl:text-right text-gray-500 dark:text-gray-400">
+           <thead class="text-xs text-white font-bold uppercase bg-blue-900  py-2 rounded-md">
+             <tr class="table-row my-2 border border-white">
+                <th class="py-2  border border-gray-300 rounded-sm">Lesson</th>
+                <th class="py-2 border border-gray-300 rounded-sm">Type</th>
+                <th class="py-2 border border-gray-300 rounded-sm">Total</th>
+                
+                <th>Marks</th>
+            </tr>
+           </thead>
+           <tbody>
+            {% if marks %}
+            {% for mark  in marks  %}
+               <tr class="table-row border ">
+                <td class="border border-gray-300 rounded-md text-gray-700 font-bold">{{mark.lesson}}</td>
+                <td class="border border-gray-300 rounded-md text-gray-700 font-bold">{{mark.type}}</td>
+                <td class="border border-gray-300 rounded-md text-gray-700 font-bold">{{mark.total}}</td>
+                <td class="border border-gray-300 rounded-md text-gray-700 font-bold">{{mark.marks}}</td>
+               </tr> 
+            {% endfor %}
+            
+            {% else %}
+            <h1>No marks Found</h1>
+            {% endif %}
+            
+           </tbody>
+        </table>
+    </div>
+   
+    
+</div>
+    
+{% endblock content %}
+    

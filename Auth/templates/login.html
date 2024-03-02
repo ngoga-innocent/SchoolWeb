@@ -1,0 +1,56 @@
+{% load static tailwind_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Web</title>
+    {% tailwind_css %}
+    <script src="{% static 'js/Jquery.js' %}"></script>
+     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+     <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body class="h-screen items-center justify-center overflow-scroll">
+    <div class="grid grid-cols-2 h-[100%] gap-3 bg-black">
+        <div id="test_bg" class="h-full rounded-r-3xl bg-blend-overlay bg-opacity-20">
+            
+            <img  class="w-20 h-20" src="{% static 'images/logo.png' %}" alt=""><!-- <img src="{% static 'images/school_bg.jpg' %}" class="h-full object-cover rounded-r-3xl" alt=""> -->
+        </div>
+        <div class="flex flex-col justify-center w-[100%] px-3">
+                <h2 class="text-white font-bold text-lg py-2">Login</h2>
+                <p class="text-white text-sm">You don't have an account You can <a class="font-bold text-purple-800" href="{% url 'register' %}">Register Here</a></p>
+
+                <form action="{% url 'login' %}" method="post" class="flex flex-col w-[90%] shadow-inner py-3 shadow-white my-7  justify-start px-4 rounded-xl border-white mx-10">
+                    {% csrf_token %}
+                    
+                    <div class="gap-y-7 flex flex-col">
+                      
+                        <div class="flex flex-row items-center border-b w-[100%] rounded-lg justify-start gap-3 px-5">
+                            <i class="fa-solid fa-envelope" style="color:white"></i>
+                            
+                             <input type="email" name="email" required class=" w-[100%] text-sm font-bold bg-transparent rounded-lg border-0 text-white" placeholder="Enter Your Email">
+                        </div>
+                       
+                        <div class="flex flex-row items-center border-b w-[100%] rounded-lg justify-start gap-3 px-5">
+                            <i class="fa-solid fa-lock" style="color:white"></i>
+                            
+                             <input type="password" name="password" required class=" w-[100%] text-sm font-bold bg-transparent rounded-lg border-0 text-white" placeholder="Enter Password">
+                        </div>
+                      
+                       
+                    </div>
+                    {% if error %}
+                    <h2 class="text-orange-400 text-center text-sm font-bold">{{error}}</h2>
+                        
+                    {% endif %}
+                    
+                    <button class="rounded-lg bg-blue-600 text-white  px-5 py-2 my-2">Login</button>
+                </form>
+        </div>
+    </div>
+    
+    
+</body>
+</html>

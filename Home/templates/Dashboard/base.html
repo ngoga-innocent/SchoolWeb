@@ -1,0 +1,55 @@
+{% load static tailwind_tags %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Web</title>
+
+     {% tailwind_css %}
+     <script src="{% static 'js/Jquery.js' %}"></script>
+     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+     <link rel="shortcut icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body style="background-color:#04193b ;" class="h-screen overflow-y-scroll bg-[#04193b] flex flex-col">
+    <div class="flex flex-row h-[100%] gap-7">
+        <div class="sidebar h-[95%] self-center  w-[20%] max-w-[20%] overflow-x-auto border border-white rounded-r-3xl px-5 py-4 flex flex-col">
+            <div class="py-8">
+                <img src="{% static 'images/avatar.jpg' %}" class="w-20 h-20 rounded-lg">
+                {% if user.is_authenticated %}
+                    <h1 class="text-white font-bold text-xl">{{user.username}}</h1>
+                    <p class="text-white font-bold text-sm">{{user.email}}</p>
+                    
+                {% endif %}
+                
+            </div>
+            <ul id="dashboard_ul flex flex-col flex-grow">
+               
+                
+               
+                {% if is_staff  %}
+                    <li class="w-[90%] hover:transition-all hover:duration-700 hover:ease-in-out flex flex-row hover:border hover:border-white rounded-lg hover:bg-blue-950 py-2 px-2"><a id="link"  href="{% url 'get_lectures' %}">Chats</a></li>
+                {% else %}
+                 <li class="w-[90%] hover:transition-all hover:duration-700 hover:ease-in-out flex flex-row hover:border hover:border-white rounded-lg hover:bg-blue-950 py-2 px-2"><a id="link"  href="{% url 'student_dashboard' %}">Dashboard</a></li>
+                <li class="w-[90%] hover:transition-all hover:duration-700 hover:ease-in-out flex flex-row hover:border hover:border-white rounded-lg hover:bg-blue-950 py-2 px-2"><a id="link"  href="{% url 'marks' %}">Marks</a></li>
+                 <li class="w-[90%] hover:transition-all hover:duration-700 hover:ease-in-out flex flex-row hover:border hover:border-white rounded-lg hover:bg-blue-950 py-2 px-2"><a id="link"  href="{% url 'get_lectures' %}">Lectures</a></li>
+                {% endif %}
+                <li class="w-[90%] hover:transition-all hover:duration-700 hover:ease-in-out flex flex-row hover:border hover:border-white rounded-lg hover:bg-blue-950 py-2 px-2"><a id="link"  href="">Internship</a></li>
+                
+
+            </ul>
+             <button class="flex flex-end mt-auto text-center border border-white rounded-md text-orange-950 font-bold bg-transparent py-3 px-3 hover:text-white items-center hover:bg-orange-700 transition-all hover:duration-1000 hover:ease-in-out"><a href="{% url 'logout' %}">Logout</a></button>
+
+            
+        </div>
+        <div class="content bg-slate-300 w-[75%] h-[95%] self-center p-3 rounded-2xl flex flex-col">
+            
+            {% block content %}
+                
+            {% endblock content %}
+                
+        </div>
+    </div>
+</body>
