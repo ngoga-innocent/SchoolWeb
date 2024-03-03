@@ -91,16 +91,15 @@ def Login(request):
             if checkpass:
                 student=Students.objects.filter(student=user).first()
                 if student:
-
                     login(request,user)
-                    return redirect('student_dashboard')
+                    return redirect('student_dashboard') 
                 elif not student:
                     parent=Parents.objects.filter(parent=user).first()
                     if parent:
                         login(request,user)
-                        return redirect('home')
-                    else:
                         return redirect('staff_dashboard')
+                    else:
+                        return redirect('home')
                 else:
                     return redirect(request,'login.html',{'error':'not either parent or student'})
             else:

@@ -1,0 +1,64 @@
+{% extends './base.html' %}
+
+{% block content %}
+    <div class="h-full overflow-y-scroll">
+        {% if internships %}
+        {% for internship in internships  %}
+        <div class="z-10 bg-white shadow-lg rounded-lg px-10 py-1 shadow-black mx-5 my-2">
+            <button value="{{internship.id}}" class="internship border rounded-md px-10 py-1 font-bold bg-green-900 text-white flex-end">Apply </button>
+            <input type="hidden" value="{{csrf_token}}" id="csrf_token">
+            <div class="flex flex-row items-center  justify-between mb-7">
+                <div>
+                    <p>Title</p>
+                    <h2 class="font-bold text-xl"> {{internship.title}}</h2>
+                </div>
+                <div>
+                    <p>Duration</p>
+                    <div class="flex flex-row items-center gap-1 ">
+                    <p class="font-bold text-sm">{{internship.starting}} <span class="font-mono">to</span></p>
+                    <p class="font-bold text-sm">{{internship.ending}}</p>
+                </div>
+                </div>
+            </div>
+            <div>
+                <p>Internship Description</p>
+                <p>{{internship.slug }}</p>
+            </div>
+            <button class="rounded-md px-10 py-1 border text-orange-500 place-self-end hover:bg-orange-400 hover:text-white">Read More</button>
+        </div>
+        {% endfor %}
+        
+        {% else %}
+        <p class="font-bold text-xs">No internship Open available</p>
+        {% endif %}
+        <div class="border  px-8 py-2 fixed bottom-10 right-14 rounded-lg hidden bg-orange-200 " id="result">
+            <p id="message_result">Success</p>
+        </div>
+        
+    </div>
+    <script>
+        $('.internship').on('click',function(){
+            const internship_id=$(this).val()
+            $.ajax({
+                method:'POST',
+                url:'{% url "apply_internship" %}',
+                data:{
+                    'internship_id':internship_id,
+                    'csrfmiddlewaretoken':$('#csrf_token').val()
+                },
+                success:function(data){
+                    
+                    $('#message_result').text(data)
+                    $('#result').removeClass('hidden')
+                    setTimeout(function(){
+                        $('#result').addClass('hidden')
+                    },5000)
+                },
+                error:function(error){
+                    console.log(error)
+                }
+            })
+        })
+    </script>
+{% endblock content %}
+    

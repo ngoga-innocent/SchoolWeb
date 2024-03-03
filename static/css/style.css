@@ -48,3 +48,7 @@ font-weight: bold;
 border-width: 1;
 border-color: white;
 }
+table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            }

@@ -1,0 +1,64 @@
+{% extends './base.html' %}
+
+{% block content %}
+    <h1 class="font-bold px-2 text-2xl text-center">Choose your parent</h1>
+    <form action="" method="post" class="flex flex-row items-center self-end gap-x-2">
+        {% csrf_token %}
+        <input type="text" class="border rounded-lg px-2 py-1 bg-transparent" placeholder="search Parent">
+        <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+    </form>
+    <table class="table-auto text-start my-2" style="border: 1px solid black;border-collapse: collapse;">
+        {% if parents %}
+        <thead class="table-header-group rounded-md ">
+            <tr style="border: 1px solid black;border-collapse: collapse;" class="table-row text-start " style="border-radius: 20px;">
+                <th style="border: 1px solid black;border-collapse: collapse;" class="text-start">First Name</th>
+                <th style="border: 1px solid black;border-collapse: collapse;" class="text-start">Last Name</th>
+                <th style="border: 1px solid black;border-collapse: collapse;" class="text-start">Action</th>
+            </tr>
+        </thead>
+        <tbody class="">
+            
+            {% for parent in parents  %}
+                <tr style="border: 1px solid black;border-collapse: collapse; border-radius:2px" class=" hover:bg-blue-600 table-row border bg-gray-100 rounded-md">
+                    <td >{{parent.parent.first_name}}</td>
+                    <td >{{parent.parent.last_name}}</td>
+                    <input type="hidden" value="{{csrf_token}}" id="csrf_token">
+                    <td >
+                        <button  value="{{parent.id}}" class=" choose_parent border rounded-md px-2 py-1 bg-green-950 hover:bg-green-600 text-white font-bold">Choose</button>
+                    </td>
+                </tr>
+            {% endfor %}
+            
+            
+        </tbody>
+        {% else %}
+                <p class="font-bold text-orange-600 text-center">No parents are available in the System Please notify yo Parents to register in system</p>
+            {% endif %}
+    </table> 
+    <div id="success_div" class="hidden bg-green-600 rounded-lg border self-center fixed right-10 bottom-10 px-20 animate-bounce">
+        <p class="text-white font-bold">Parent Assigned to you successFully</p>
+    </div>
+    <script>
+        $(document).ready(function(){
+            $('.choose_parent').on('click',function(){
+                const parent_id=$(this).val()
+                $.ajax({
+                    method:'POST',
+                    url:'{% url "parents" %}',
+                    data:{'parent_id':parent_id,'csrfmiddlewaretoken':$('#csrf_token').val()},
+                    success:function(data){
+                        $('#success_div').removeClass('hidden')
+                        setTimeout(function(){
+                             $('#success_div').addClass('hidden')
+                        },5000)
+                    },
+                    error:function(){
+                        console.log(error)
+                    }
+
+                })
+            })
+        })
+    </script>
+{% endblock content %}
+    

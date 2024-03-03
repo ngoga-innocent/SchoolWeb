@@ -11,10 +11,16 @@
 
     </div>
 </div>
-<div class="w-[95%] my-8 py-10 self-center px-4 bg-blue-900 rounded-lg flex flex-row justify-between">
+<div class="w-[95%] my-8 py-10 self-center px-4 bg-blue-900 rounded-lg">
+    <div class=" flex flex-row justify-between">
     <h1 class="text-lg font-bold text-white">Good {{time}} {{user.first_name}}</h1>
-    <h1 class="text-white font-bold">Enrolled in <span class="text-orange-600">{{course.name}}</span></h1>
+    <h1 class="text-white font-bold ">Enrolled in <span class="text-orange-600">{{course.name}}</span></h1>
 
+    </div>
+    {% if message %}
+        <p class="text-center text-white font-bold text-xs">You have Parent please <a class="text-green-500 text-md" href="{% url 'parents' %}">choose one</a></p>
+    {% endif %}
+    
 </div>
 <div class="grid grid-cols-4 gap-5 w-[95%] self-center">
     {% if lessons %}
