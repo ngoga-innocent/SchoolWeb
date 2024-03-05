@@ -5,7 +5,7 @@
         {% if internships %}
         {% for internship in internships  %}
         <div class="z-10 bg-white shadow-lg rounded-lg px-10 py-1 shadow-black mx-5 my-2">
-            <button value="{{internship.id}}" class="internship border rounded-md px-10 py-1 font-bold bg-green-900 text-white flex-end">Apply </button>
+            <button value="{{internship.id}}" class="internship hover:bg-green-500 border rounded-md px-10 py-1 font-bold bg-green-900 text-white flex-end">Apply </button>
             <input type="hidden" value="{{csrf_token}}" id="csrf_token">
             <div class="flex flex-row items-center  justify-between mb-7">
                 <div>

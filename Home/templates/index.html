@@ -19,12 +19,22 @@
         <div class=" flex flex-row items-center justify-between flex-1">
             <img src="{% static 'images/logo2.png' %}" alt=" " class=" rounded-full items-center">
         <ul class="flex flex-row gap-4 px-2">
-            <li class="hover:bg-yellow-600 hover:transition hover:border px-4 py-1 rounded-md"><a href="" class="hover:text-white font-bold">Home</a></li>
-            <li class="hover:bg-yellow-600 hover:transition hover:border px-4 py-1 rounded-md"><a href="" class="hover:text-white font-bold">Home</a></li>
+            <li class="hover:bg-yellow-600 hover:transition hover:border px-4 py-1 rounded-md"><a href="{% url 'home' %}" class="hover:text-white font-bold">Home</a></li>
+            <li class="hover:bg-yellow-600 hover:transition hover:border px-4 py-1 rounded-md"><a href="{% url 'home' %}#value" class="hover:text-white font-bold">Value</a></li>
 
-            <li class="hover:bg-yellow-600 hover:transition hover:border px-4 py-1 rounded-md"><a href="" class="hover:text-white font-bold">Home</a></li>
+            <li class="hover:bg-yellow-600 hover:transition hover:border px-4 py-1 rounded-md"><a href="{% url 'home' %}#blog" class="hover:text-white font-bold">Blog</a></li>
             
                 {% if user.is_authenticated %}
+                    {% if status == 'student' %}
+                     <li class="hover:bg-yellow-600 hover:transition hover:border px-4 py-1 rounded-md"><a href="{% url 'student_dashboard' %}" class="hover:text-white font-bold text-green-600 "> Dashboard </a></li>
+                     {% elif status == 'parent' %}
+                      <li class="hover:bg-yellow-600 hover:transition hover:border px-4 py-1 rounded-md"><a href="{% url 'parent_dashboard' %}" class="hover:text-white font-bold text-green-600 "> Dashboard </a></li>
+                    {% elif status == 'lecture' %}
+                        <li class="hover:bg-yellow-600 hover:transition hover:border px-4 py-1 rounded-md"><a href="{% url 'staff_dashboard' %}" class="hover:text-white font-bold text-green-600 "> Dashboard </a></li>
+                        {% else %}
+                        
+                    {% endif %}
+                    
                 <li class="hover:bg-yellow-600 hover:transition hover:border px-4 py-1 rounded-md"><a href="" class="hover:text-white font-bold text-green-600 "> {{user.username}} </a></li>
                 <li class="hover:bg-yellow-600 hover:transition hover:border px-4 py-1 border rounded-md"><a href="{% url 'logout' %}" class="hover:text-white font-bold text-orange-600 "> Logout </a></li>
                 {% else %}
@@ -69,7 +79,21 @@
                 <li>Programs</li>
             </ul>
         </div>
-        
+        <div>
+            <h1 class="font-bold text-xl my-2">Contact Us</h1>
+           {% if email_message %}
+            <p>{{email_message}}</p>
+           {% endif %}
+           <div id="spinner" class=" hidden w-5 h-5 rounded-full border border-dashed animate-spin"></div>
+            <form action="" id="contact_us" class="gap-y-3">
+                <div class="my-2">
+                    <input  type="hidden" value="{{ csrf_token }}" id="csrf_token">
+                    <input required type="email" id="sender" class="border rounded-lg bg-transparent font-bold text-gray-600" placeholder="Enter Your Email">
+                </div>
+                <div><textarea required name="" id="email_message" placeholder="Enter your Message" class="max-h-20 w-[100%] border rounded-lg bg-transparent fonti-semibold"></textarea></div>
+                <button type="submit" class="text-white bg-green-900 hover:bg-green-700 border rounded-lg px-5 py-2">Submit</button>
+            </form>
+        </div>
        <div>
         <h2 class="font-bold py-2">Media Links</h2>
          <div class="flex flex-row gap-2">
@@ -79,8 +103,40 @@
                <p><i class="fa-brands fa-square-youtube"></i></p>
         </div>
        </div>
+       <div id="email_result" class="hidden fixed bottom-12 right-12 rounded-lg bg-gray-600 px-10 py-1">
+            <p id="email_text" class="text-white font-bold">Email Sent</p>
+       </div>
 
     </footer>
-   
+   <script>
+    $('#contact_us').on('submit',function(e){
+        $('#spinner').removeClass('hidden')
+        e.preventDefault()
+        const sender=$('#sender').val()
+        const message=$('#email_message').val()
+        $.ajax({
+            method:'POST',
+            url:'{% url "contact_us" %}',
+            data:{
+                'email':sender,
+                'message':message,
+                'csrfmiddlewaretoken':$('#csrf_token').val()
+            },
+            success:function(data){
+                $('#email_text').text(data)
+                $('#email_result').removeClass('hidden')
+                $('#spinner').addClass('hidden')
+                setTimeout(function(){
+                    $('#email_result').addClass('hidden')
+                },5000)
+                sender=''
+                message=''
+            },
+            error:function(error){
+                console.log(error)
+            }
+        })
+    })
+   </script>
 </body>
 </html>

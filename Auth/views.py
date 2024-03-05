@@ -5,7 +5,7 @@ from django.contrib import messages
 from .models import Parents,Students,Marks
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
-from django.contrib.auth import login,authenticate
+from django.contrib.auth import login,authenticate,logout
 from Academics.models import Course
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -60,7 +60,7 @@ def Register(request):
             if account_type=='Parent':
                 parent=Parents.objects.create(parent=user)
                 login(request,user)
-                return redirect('dashboard')
+                return redirect('staff_dashboard')
             elif account_type=='Student':
                 regNo=createRegNo(course)
                 course_obj=get_object_or_404(Course,pk=course)
@@ -94,11 +94,15 @@ def Login(request):
                     login(request,user)
                     return redirect('student_dashboard') 
                 elif not student:
+                    
                     parent=Parents.objects.filter(parent=user).first()
                     if parent:
                         login(request,user)
-                        return redirect('staff_dashboard')
+                        
+                        return redirect('parent_dashboard')
                     else:
+                        login(request,user)
+                        
                         return redirect('home')
                 else:
                     return redirect(request,'login.html',{'error':'not either parent or student'})
@@ -109,10 +113,25 @@ def Login(request):
     return render(request, 'login.html')
 
 def getMark(request):
-    user=request.user
-    student=get_object_or_404(Students,student=user)
+    
+    try:
+        student=Students.objects.get(student=request.user)
+        
+        is_parent=False
+        student_details=tudent_details=User.objects.get(pk=student.student.id)
+    except Students.DoesNotExist:
+        try:
+            parent=Parents.objects.get(parent=request.user)
+            student=Students.objects.get(pk=parent.student)
+            student_details=User.objects.get(pk=student.student.id)
+            
+            is_parent=True
+        except Parents.DoesNotExist:
+            logout(request)
+            return render(request,'login.html',{'message':'Please Login as Student or Parent'})
     marks=Marks.objects.filter(student=student)
-    context={'marks':marks,'user':user}
+    
+    context={'marks':marks,'user':request.user,'is_parent':is_parent,'student':student_details,}
     return render(request,'Marks/student_marks.html',context)
     #return render(request,'Marks/downloadable_marks.html',context)
 
@@ -128,8 +147,18 @@ def render_to_pdf(template_src,context_dict={}):
 @login_required
 def DownloadMarks(request):
     user=request.user
-    student=get_object_or_404(Students,student=user)
+    try:
+        student=Students.objects.get(student=request.user)
+        is_parent=False
+    except Students.DoesNotExist:
+        try:
+            parent=Parents.objects.get(parent=request.user)
+            student=parent.student
+            is_parent=True
+        except Parents.DoesNotExist:
+            return render(request,'login.html',{'message':'Please login as Student or Parent'})
+    
     marks=Marks.objects.filter(student=student)
-    context={'marks':marks,'user':user}
+    context={'marks':marks,'user':user,'student':student,'is_parent':is_parent}
     pdf=render_to_pdf('Marks/downloadable_marks.html',context)
     return HttpResponse(pdf,content_type='application/pdf')

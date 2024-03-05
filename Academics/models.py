@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 class Course(models.Model):
     name=models.CharField(max_length=255,null=False)
+    thumbnail=models.ImageField(upload_to='cuorse',null=True,blank=True)
     def __str__(self):
         return self.name
     
@@ -29,4 +30,8 @@ class Internships(models.Model):
 class RegisteredInterns(models.Model):
     student=models.ForeignKey(User,on_delete=models.CASCADE)
     internship=models.ForeignKey(Internships,on_delete=models.CASCADE)
+
+class FAQ(models.Model):
+    question=models.TextField()
+    answer=models.TextField()
 

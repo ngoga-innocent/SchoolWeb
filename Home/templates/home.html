@@ -9,7 +9,7 @@
 
     </h1>
     <div class="py-8">
-        <button class="rounded-lg bg-green-800 hover:bg-orange-500 font-bold   px-2 py-3 text-white">Join Our School</button>
+        <button class="rounded-lg bg-green-800 hover:bg-orange-500 font-bold   px-2 py-3 text-white"><a href="{% url 'register' %}">Join Our School Community</a></button>
     </div>
 {% endblock Headlines %}
 
@@ -76,7 +76,7 @@
     
     
 </div>
-<div class="py-20 bg-cover bg-opacity-25" style="background-image: url('{% static "images/background.jpg" %}'); " id="values"> 
+<div id="value" class="py-20 bg-cover bg-opacity-25" style="background-image: url('{% static "images/background.jpg" %}'); " id="values"> 
     <h2 class="font-bold text-center text-white text-2xl py-6">Our School Values</h2>
     <div class="grid grid-cols-3 gap-3 px-20 " >
     <div class="flex flex-row gap-8 items-center bg-white border z-10 shadow-lg shadow-black rounded-xl py-2 px-2">
@@ -118,15 +118,61 @@
         <i class="w-24 h-24 fa-solid fa-location-crosshairs" style="height: 20px;width: 20px;color:red"></i>
         <div>
             <h1 class="font-bold py-6 text-center">Courage and Perseverance</h1>
-        <p> Encouraging courage and perseverance in the face of challenges and adversity. Teaching students to overcome obstacles, take risks, and persist in pursuit of their goals.
-
-</p>
+        <p> Encouraging courage and perseverance in the face of challenges and adversity. Teaching students to overcome obstacles, take risks, and persist in pursuit of their goals.</p>
         </div>
     </div>
 
     
 </div>
 </div>
+<div class=" px-14">
+   <h1 class="font-bold text-2xl"> Frequent Asked  Questions</h1>
+   <div class=" gap-x-8 gap-y-3">
+    <div class="flex flex-col">
+        {% if faqs %}
+        {% for faq in faqs  %}
+            <button data-faq="{{faq.answer}}" class="faq  gap-y-2 gap-x-1 hover:bg-slate-300 hover:px-10 rounded-lg py-1">
+                <div class="flex flex-row items-center">
+                    <i class="fa fa-assistive-listening-systems" aria-hidden="true" style="color:goldenrod;width: 20px;"></i>
+                    <p class="font-bold text-lg">{{faq.question}}</p>
+                </div>
+                <div class="faq_answer hidden">
+                    <p>{{faq.answer}}</p>
+                </div>
+            </button>
+            <hr class="w-[85%] items-center">
+        {% endfor %}
+        
+    {% endif %}
+    </div>
     
+    
+    
+   </div>
+</div> 
+<div id="blog" class="flex flex-col items-center justify-center py-10 my-4 px-4 bg-slate-100">
+    <h2 class="font-bold text-xl py-6">Blog and Recent News</h2>
+    {% if blogs %}
+        <div class="grid grid-cols-4 gap-2">
+            {% for blog in blogs  %}
+                <div class="h-56 flex flex-col">
+                    <img src="{{blog.thumbnail.url}}" class="h-[80%] w-[100%] rounded-lg" alt="{{blog.title}}">
+                    <a  href="{% url 'single_blog' blog.id %}" class="font-bold text-blue-500 text-center hover:text-orange-300">{{blog.title}}</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+</div>
+<script>
+   $('.faq').on('click',function(){
+     $('.faq_answer').addClass('hidden');
+        
+        // Show answer of the clicked question
+        const faqAnswer = $(this).find('.faq_answer').toggleClass('hidden');
+        // $('.faq_details').html(faqAnswer.html());
+   })
+   
+</script>
 {% endblock content %}
     

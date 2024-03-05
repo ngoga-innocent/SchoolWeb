@@ -30,7 +30,13 @@
                 
                
                 {% if is_staff  %}
+                <li class="w-[90%] hover:transition-all hover:duration-700 hover:ease-in-out flex flex-row hover:border hover:border-white rounded-lg hover:bg-blue-950 py-2 px-2"><a id="link"  href="{% url 'staff_dashboard' %}">Dashboard</a></li>
                     <li class="w-[90%] hover:transition-all hover:duration-700 hover:ease-in-out flex flex-row hover:border hover:border-white rounded-lg hover:bg-blue-950 py-2 px-2"><a id="link"  href="{% url 'get_lectures' %}">Chats</a></li>
+                    <li class="w-[90%] hover:transition-all hover:duration-700 hover:ease-in-out flex flex-row hover:border hover:border-white rounded-lg hover:bg-blue-950 py-2 px-2"><a id="link"  href="{% url 'marks' %}">Student Marks</a></li>
+                {% elif is_parent %}
+                    <li class="w-[90%] hover:transition-all hover:duration-700 hover:ease-in-out flex flex-row hover:border hover:border-white rounded-lg hover:bg-blue-950 py-2 px-2"><a id="link"  href="{% url 'staff_dashboard' %}">Dashboard</a></li>
+                    <li class="w-[90%] hover:transition-all hover:duration-700 hover:ease-in-out flex flex-row hover:border hover:border-white rounded-lg hover:bg-blue-950 py-2 px-2"><a id="link"  href="{% url 'get_lectures' %}">Chats</a></li>
+                    <li class="w-[90%] hover:transition-all hover:duration-700 hover:ease-in-out flex flex-row hover:border hover:border-white rounded-lg hover:bg-blue-950 py-2 px-2"><a id="link"  href="{% url 'marks' %}">Children Marks</a></li>
                 {% else %}
                  <li class="w-[90%] hover:transition-all hover:duration-700 hover:ease-in-out flex flex-row hover:border hover:border-white rounded-lg hover:bg-blue-950 py-2 px-2"><a id="link"  href="{% url 'student_dashboard' %}">Dashboard</a></li>
                 <li class="w-[90%] hover:transition-all hover:duration-700 hover:ease-in-out flex flex-row hover:border hover:border-white rounded-lg hover:bg-blue-950 py-2 px-2"><a id="link"  href="{% url 'marks' %}">Marks</a></li>

@@ -37,9 +37,61 @@
     
 
 </div>
-    
+<div class="fixed bottom-14 right-20 ">
+    <form id="pay_form" action="" class="hidden w-20 mb-5 px-10 mx-32 ">
+        <h1 class="font-bold text-xl text-center">Pay From Here!!</h1>
+        <input type="number" id="phone_number" class="rounded-lg border bg-transparent py-1 my-1 " placeholder="Enter Number for Payment"><br>
+        <input type="number" id="amount" class="rounded-lg border bg-transparent py-1 mb-3 " placeholder="Enter the Amount">
+        <button type="submit" id="pay" class="bg-orange-800 text-white font-bold px-12 py-1 rounded-lg border border-white z-10 shadow-xl shadow-black">Pay</button>
+    </form>
+    <button  class="pay_initiate animate-pulse bg-orange-600 text-white font-bold px-14 py-1 rounded-lg z-10 shadow-black shadow-2xl">Pay Now</button>
 
-
+</div>
+<script src="https://checkout.flutterwave.com/v3.js"></script>
+<script>
+    $('.pay_initiate').on('click',function(){
+        $('#pay_form').toggleClass('hidden')
+        $(this).addClass('hidden')
+    })
+$('#pay_form').on('submit',function(e){
+  e.preventDefault()
+  makePayment()
+})
+  function makePayment() {
+    const amount=$()
+    FlutterwaveCheckout({
+      public_key: "FLWPUBK_TEST-21469351733ef2890a047a0918e952cb-X",
+      tx_ref: "txref-DI0NzMx13",
+      amount: $('#amount').val(),
+      currency: "RWF",
+      payment_options: "card, banktransfer, ussd,momo",
+      meta: {
+        source: "docs-inline-test",
+        consumer_mac: "92a3-912ba-1192a",
+      },
+      customer: {
+        email: "test@mailinator.com",
+        phone_number: $('#phone_number').val(),
+        name: "Ayomide Jimi-Oni",
+      },
+      customizations: {
+        title: "Web System Payment ",
+        description: "Test Payment",
+        logo: "https://checkout.flutterwave.com/assets/img/rave-logo.png",
+      },
+      callback: function (data){
+        console.log("payment callback:", data);
+        $('#payform').toggleClass('hidden')
+        $('.pay_initiate').removeClass('hidden')
+      },
+      onclose: function() {
+        console.log("Payment cancelled!");
+         $('#payform').toggleClass('hidden')
+        $('.pay_initiate').removeClass('hidden')
+      }
+    });
+  }
+</script>
     
 {% endblock content %}
     

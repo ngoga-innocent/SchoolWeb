@@ -32,6 +32,7 @@ def getMessage(request):
             try:
                 # Try to get the room where the current user is the receiver
                 room = Room.objects.get(name=createRoom(user_receiver.id, user.id))
+                print(room)
             except Room.DoesNotExist:
                 # If the room doesn't exist, create it
                 room = Room.objects.create(name=room, sender=user, reciever=user_receiver)
@@ -55,6 +56,7 @@ def Send(request):
         receiver=request.POST['reciever_id']
         receiver_obj=User.objects.get(id=receiver)
         room=createRoom(user.id,receiver_obj.id)
+        print(user.username,message,receiver_obj.id,room)
         try:
             room_1=Room.objects.get(name=room)
             if room_1 is not None:
@@ -68,11 +70,14 @@ def Send(request):
         return HttpResponse({message})
 def getMessageOfRoom(request):
     if request.method=='POST':
-        room_name=request.POST['room_name']
-        room=Room.objects.get(name=room_name)
-        messages=Messages.objects.filter(Room=room)
-        serialized_message=serialize('json',messages)
-        return HttpResponse(serialized_message,content_type='application/json')
+        room_name=request.POST.get('room_name')
+        try:
+            room=Room.objects.get(name=room_name)
+            messages=Messages.objects.filter(Room=room)
+            serialized_message=serialize('json',messages)
+            return HttpResponse(serialized_message,content_type='application/json')
+        except Room.DoesNotExist:
+            return HttpResponse('no Room Found')
 def getCurrentRoom(request):
     if request.method=='POST':
         user=request.user
